@@ -106,6 +106,8 @@ set(sources
     
     ${source_path}/pipeline/AbstractInputSlot.cpp
     ${source_path}/pipeline/InputSlot.cpp
+    ${source_path}/pipeline/DoubleBufferedInputSlot.cpp
+    ${source_path}/pipeline/TripleBufferedInputSlot.cpp
     ${source_path}/pipeline/PipelinePainter.cpp
     ${source_path}/pipeline/AbstractStage.cpp
     ${source_path}/pipeline/AbstractPipeline.cpp
@@ -201,13 +203,22 @@ set(api_includes
     
     ${include_path}/pipeline/AbstractData.h
     ${include_path}/pipeline/AbstractPipeline.hpp
+    ${include_path}/pipeline/Data.h
     ${include_path}/pipeline/Data.hpp
+    ${include_path}/pipeline/DoubleBufferedData.h
+    ${include_path}/pipeline/DoubleBufferedData.hpp
+    ${include_path}/pipeline/TripleBufferedData.h
+    ${include_path}/pipeline/TripleBufferedData.hpp
     ${include_path}/pipeline/AbstractStage.h
     ${include_path}/pipeline/InputSlot.h
+    ${include_path}/pipeline/InputSlot.h
+    ${include_path}/pipeline/DoubleBufferedInputSlot.h
+    ${include_path}/pipeline/TripleBufferedInputSlot.h
     ${include_path}/pipeline/PipelinePainter.h
     ${include_path}/pipeline/InputSlot.hpp
+    ${include_path}/pipeline/DoubleBufferedInputSlot.hpp
+    ${include_path}/pipeline/TripleBufferedInputSlot.hpp
     ${include_path}/pipeline/AbstractPipeline.h
-    ${include_path}/pipeline/Data.h
     ${include_path}/pipeline/AbstractInputSlot.h
     
     ${include_path}/plugin/plugin_api.h
