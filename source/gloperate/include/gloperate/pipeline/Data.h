@@ -12,6 +12,9 @@ template <typename T>
 class Data : public AbstractData
 {
 public:
+    T data();
+    void setData(const T & newData);
+
     virtual T & startWriting() = 0;
     virtual void finishWriting() = 0;
 

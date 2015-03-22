@@ -14,8 +14,9 @@ template <typename T>
 class TripleBufferedData : public Data<T>
 {
 public:
+    TripleBufferedData(const T & d);
     template <typename... Args>
-    explicit TripleBufferedData(Args&&... args);
+    TripleBufferedData(Args&&... args);
 
     T & startWriting();
     void finishWriting();

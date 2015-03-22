@@ -33,24 +33,24 @@ public:
     const T & startReading(const T & defaultValue);
     void finishReading();
 
-    virtual bool connectTo(const AbstractData & data) override;
+    virtual bool connectTo(AbstractData &data) override;
     virtual bool matchType(const AbstractData & data) override;
 
     template <typename U>
-    const Data<U> & operator=(const Data<U> & data);
+    Data<U> & operator=(Data<U> & data);
     template <typename U>
     InputSlot<T> & operator=(InputSlot<U> & slot);
 
     virtual const Data<T> * connectedData() const override;
 
 protected:
-    const Data<T>* m_data;
+    Data<T>* m_data;
     signalzeug::ScopedConnection m_connection;
 
     static const T s_defaultValue;
 
     template <typename U>
-    void connect(const Data<U> & data);
+    void connect(Data<U> & data);
 
 private:
 };

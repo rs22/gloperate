@@ -66,9 +66,9 @@ public:
     {
         m_fbo = new globjects::Framebuffer;
 
-        color.data() = globjects::Texture::createDefault(gl::GL_TEXTURE_2D);
-        normal.data() = globjects::Texture::createDefault(gl::GL_TEXTURE_2D);
-        geometry.data() = globjects::Texture::createDefault(gl::GL_TEXTURE_2D);
+        color.setData(globjects::Texture::createDefault(gl::GL_TEXTURE_2D));
+        normal.setData(globjects::Texture::createDefault(gl::GL_TEXTURE_2D));
+        geometry.setData(globjects::Texture::createDefault(gl::GL_TEXTURE_2D));
         m_depth = new globjects::Renderbuffer();
 
         m_fbo->attachTexture(gl::GL_COLOR_ATTACHMENT0, color.data());
@@ -273,30 +273,30 @@ PostprocessingPipeline::~PostprocessingPipeline()
 
 gloperate::AbstractTargetFramebufferCapability * PostprocessingPipeline::targetFramebufferCapability()
 {
-    return m_targetFBO;
+    return m_targetFBO.data();
 }
 
 gloperate::AbstractViewportCapability * PostprocessingPipeline::viewportCapability()
 {
-    return m_viewport;
+    return m_viewport.data();
 }
 
 gloperate::AbstractVirtualTimeCapability * PostprocessingPipeline::virtualTimeCapability()
 {
-    return m_time;
+    return m_time.data();
 }
 
 gloperate::AbstractCameraCapability * PostprocessingPipeline::cameraCapability()
 {
-    return m_camera;
+    return m_camera.data();
 }
 
 gloperate::AbstractProjectionCapability * PostprocessingPipeline::projectionCapability()
 {
-    return m_projection;
+    return m_projection.data();
 }
 
 gloperate::AbstractTypedRenderTargetCapability * PostprocessingPipeline::renderTargetCapability()
 {
-    return m_renderTargets;
+    return m_renderTargets.data();
 }

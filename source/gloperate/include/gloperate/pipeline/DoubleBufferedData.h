@@ -14,8 +14,9 @@ template <typename T>
 class DoubleBufferedData : public Data<T>
 {
 public:
+    DoubleBufferedData(const T & d);
     template <typename... Args>
-    explicit DoubleBufferedData(Args&&... args);
+    DoubleBufferedData(Args&&... args);
 
     T & startWriting();
     void finishWriting();

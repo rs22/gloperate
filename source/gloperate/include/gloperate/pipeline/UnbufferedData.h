@@ -14,8 +14,9 @@ template <typename T>
 class UnbufferedData : public Data<T>
 {
 public:
+    UnbufferedData(const T & d);
     template <typename... Args>
-    explicit UnbufferedData(Args&&... args);
+    UnbufferedData(Args&&... args);
 
     T & startWriting() override;
     void finishWriting() override;

@@ -34,7 +34,7 @@ public:
 
     virtual std::string qualifiedName() const;
 
-    virtual bool connectTo(const AbstractData & data) = 0;
+    virtual bool connectTo(AbstractData & data) = 0;
     virtual bool matchType(const AbstractData & data) = 0;
 
     bool hasChanged() const;

@@ -7,9 +7,15 @@ namespace gloperate
 {
 
 template <typename T>
+TripleBufferedData<T>::TripleBufferedData(const T & d)
+: m_writeData(d)
+{
+}
+
+template <typename T>
 template <typename... Args>
 TripleBufferedData<T>::TripleBufferedData(Args&&... args)
-: m_readData(std::forward<Args>(args)...)
+: m_writeData(std::forward<Args>(args)...)
 , m_update(false)
 {
 }

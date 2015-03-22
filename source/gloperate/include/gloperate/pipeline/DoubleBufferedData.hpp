@@ -7,9 +7,15 @@ namespace gloperate
 {
 
 template <typename T>
+DoubleBufferedData<T>::DoubleBufferedData(const T & d)
+: m_writeData(d)
+{
+}
+
+template <typename T>
 template <typename... Args>
 DoubleBufferedData<T>::DoubleBufferedData(Args&&... args)
-: m_readData(std::forward<Args>(args)...)
+: m_writeData(std::forward<Args>(args)...)
 {
 }
 
