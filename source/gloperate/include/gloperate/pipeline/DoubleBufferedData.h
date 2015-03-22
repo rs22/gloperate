@@ -1,40 +1,31 @@
 #pragma once
 
-#include <string>
+#include <mutex>
 
 #include <gloperate/gloperate_api.h>
 
-#include <gloperate/pipeline/AbstractData.h>
+#include <gloperate/pipeline/Data.h>
 
 
 namespace gloperate 
 {
 
 template <typename T>
-class DoubleBufferedData : public AbstractData
+class DoubleBufferedData : public Data<T>
 {
 public:
     template <typename... Args>
     explicit DoubleBufferedData(Args&&... args);
 
-    T & data();
-    const T & data() const;
+    T & startWriting();
+    void finishWriting();
 
-    T & operator*();
-    const T & operator*() const;
-    T * operator->();
-    const T * operator->() const;
-
-    operator const T &() const;
-
-    DoubleBufferedData<T> & operator=(const DoubleBufferedData<T> & data);
-    const T & operator=(const T & value);
-
-    void setData(const T & value);
-
-    virtual std::string type() const override { return typeid(T).name(); }
+    const T & startReading();
+    void finishReading();
 protected:
-    T m_data;
+    T m_writeData;
+    T m_readData;
+    std::mutex m_mutex;
 };
 
 } // namespace gloperate

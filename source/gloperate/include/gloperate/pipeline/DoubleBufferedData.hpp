@@ -9,74 +9,38 @@ namespace gloperate
 template <typename T>
 template <typename... Args>
 DoubleBufferedData<T>::DoubleBufferedData(Args&&... args)
-: m_data(std::forward<Args>(args)...)
+: m_readData(std::forward<Args>(args)...)
 {
 }
 
 template <typename T>
-T & DoubleBufferedData<T>::data()
+T & DoubleBufferedData<T>::startWriting()
 {
-    return m_data;
+    return m_writeData;
 }
 
 template <typename T>
-const T & DoubleBufferedData<T>::data() const
+void DoubleBufferedData<T>::finishWriting()
 {
-    return m_data;
+    m_mutex.lock();
+    std::swap(m_writeData, m_readData);
+    m_mutex.unlock();
+
+    this->invalidated();
 }
 
 template <typename T>
-T & DoubleBufferedData<T>::operator*()
+const T & DoubleBufferedData<T>::startReading()
 {
-    return m_data;
+    m_mutex.lock();
+
+    return m_readData;
 }
 
 template <typename T>
-const T & DoubleBufferedData<T>::operator*() const
+void DoubleBufferedData<T>::finishReading()
 {
-    return m_data;
+    m_mutex.unlock();
 }
 
-template <typename T>
-T * DoubleBufferedData<T>::operator->()
-{
-    return &m_data;
-}
-
-template <typename T>
-const T * DoubleBufferedData<T>::operator->() const
-{
-    return &m_data;
-}
-
-template <typename T>
-DoubleBufferedData<T>::operator const T &() const
-{
-    return m_data;
-}
-
-template <typename T>
-DoubleBufferedData<T> & DoubleBufferedData<T>::operator=(const DoubleBufferedData<T> & data)
-{
-    *this = data.data();
-
-    return *this;
-}
-
-template <typename T>
-const T & DoubleBufferedData<T>::operator=(const T & value)
-{
-    m_data = value;
-    invalidated();
-
-    return value;
-}
-
-template <typename T>
-void DoubleBufferedData<T>::setData(const T & value)
-{
-    m_data = value;
-    invalidated();
-}
-    
 } // namespace gloperate

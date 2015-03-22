@@ -23,7 +23,7 @@
 #include <gloperate/base/RenderTargetType.h>
 
 #include <gloperate/pipeline/AbstractStage.h>
-#include <gloperate/pipeline/Data.h>
+#include <gloperate/pipeline/UnbufferedData.h>
 #include <gloperate/pipeline/InputSlot.h>
 
 #include <gloperate/painter/Camera.h>
@@ -104,9 +104,9 @@ public:
     gloperate::InputSlot<gloperate::AbstractCameraCapability *> camera;
     gloperate::InputSlot<gloperate::AbstractProjectionCapability *> projection;
 
-    gloperate::Data<globjects::ref_ptr<globjects::Texture>> color;
-    gloperate::Data<globjects::ref_ptr<globjects::Texture>> normal;
-    gloperate::Data<globjects::ref_ptr<globjects::Texture>> geometry;
+    gloperate::UnbufferedData<globjects::ref_ptr<globjects::Texture>> color;
+    gloperate::UnbufferedData<globjects::ref_ptr<globjects::Texture>> normal;
+    gloperate::UnbufferedData<globjects::ref_ptr<globjects::Texture>> geometry;
 protected:
     virtual void process() override
     {

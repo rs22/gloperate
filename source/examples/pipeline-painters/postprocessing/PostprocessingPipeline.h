@@ -1,7 +1,7 @@
 #pragma once
 
 #include <gloperate/pipeline/AbstractPipeline.h>
-#include <gloperate/pipeline/Data.h>
+#include <gloperate/pipeline/UnbufferedData.h>
 
 namespace gloperate
 {
@@ -35,10 +35,10 @@ protected:
     RasterizationStage  * m_rasterization;
     PostprocessingStage * m_postprocessing;
 
-    gloperate::Data<gloperate::AbstractTargetFramebufferCapability *> m_targetFBO;
-    gloperate::Data<gloperate::AbstractViewportCapability *> m_viewport;
-    gloperate::Data<gloperate::AbstractVirtualTimeCapability *> m_time;
-    gloperate::Data<gloperate::AbstractCameraCapability *> m_camera;
-    gloperate::Data<gloperate::AbstractProjectionCapability *> m_projection;
-    gloperate::Data<gloperate::AbstractTypedRenderTargetCapability *> m_renderTargets;
+    gloperate::UnbufferedData<gloperate::AbstractTargetFramebufferCapability *> m_targetFBO;
+    gloperate::UnbufferedData<gloperate::AbstractViewportCapability *> m_viewport;
+    gloperate::UnbufferedData<gloperate::AbstractVirtualTimeCapability *> m_time;
+    gloperate::UnbufferedData<gloperate::AbstractCameraCapability *> m_camera;
+    gloperate::UnbufferedData<gloperate::AbstractProjectionCapability *> m_projection;
+    gloperate::UnbufferedData<gloperate::AbstractTypedRenderTargetCapability *> m_renderTargets;
 };

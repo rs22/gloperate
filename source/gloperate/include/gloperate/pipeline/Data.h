@@ -1,7 +1,5 @@
 #pragma once
 
-#include <string>
-
 #include <gloperate/gloperate_api.h>
 
 #include <gloperate/pipeline/AbstractData.h>
@@ -14,27 +12,13 @@ template <typename T>
 class Data : public AbstractData
 {
 public:
-    template <typename... Args>
-    explicit Data(Args&&... args);
+    virtual T & startWriting() = 0;
+    virtual void finishWriting() = 0;
 
-    T & data();
-    const T & data() const;
+    virtual const T & startReading() = 0;
+    virtual void finishReading() = 0;
 
-    T & operator*();
-    const T & operator*() const;
-    T * operator->();
-    const T * operator->() const;
-
-    operator const T &() const;
-
-    Data<T> & operator=(const Data<T> & data);
-    const T & operator=(const T & value);
-
-    void setData(const T & value);
-
-    virtual std::string type() const override { return typeid(T).name(); }
-protected:
-    T m_data;
+    virtual std::string type() const override;
 };
 
 } // namespace gloperate

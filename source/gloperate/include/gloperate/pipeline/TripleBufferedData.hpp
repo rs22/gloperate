@@ -9,74 +9,45 @@ namespace gloperate
 template <typename T>
 template <typename... Args>
 TripleBufferedData<T>::TripleBufferedData(Args&&... args)
-: m_data(std::forward<Args>(args)...)
+: m_readData(std::forward<Args>(args)...)
+, m_update(false)
 {
 }
 
 template <typename T>
-T & TripleBufferedData<T>::data()
+T & TripleBufferedData<T>::startWriting()
 {
-    return m_data;
+    return m_writeData;
 }
 
 template <typename T>
-const T & TripleBufferedData<T>::data() const
+void TripleBufferedData<T>::finishWriting()
 {
-    return m_data;
+    m_mutex.lock();
+    std::swap(m_writeData, m_intermediateData);
+    m_update = true;
+    m_mutex.unlock();
+
+    this->invalidated();
 }
 
 template <typename T>
-T & TripleBufferedData<T>::operator*()
+const T & TripleBufferedData<T>::startReading()
 {
-    return m_data;
+    m_mutex.lock();
+    if (m_update)
+    {
+        m_update = false;
+        std::swap(m_intermediateData, m_readData);
+    }
+    m_mutex.unlock();
+
+    return m_readData;
 }
 
 template <typename T>
-const T & TripleBufferedData<T>::operator*() const
+void TripleBufferedData<T>::finishReading()
 {
-    return m_data;
 }
 
-template <typename T>
-T * TripleBufferedData<T>::operator->()
-{
-    return &m_data;
-}
-
-template <typename T>
-const T * TripleBufferedData<T>::operator->() const
-{
-    return &m_data;
-}
-
-template <typename T>
-TripleBufferedData<T>::operator const T &() const
-{
-    return m_data;
-}
-
-template <typename T>
-TripleBufferedData<T> & TripleBufferedData<T>::operator=(const TripleBufferedData<T> & data)
-{
-    *this = data.data();
-
-    return *this;
-}
-
-template <typename T>
-const T & TripleBufferedData<T>::operator=(const T & value)
-{
-    m_data = value;
-    invalidated();
-
-    return value;
-}
-
-template <typename T>
-void TripleBufferedData<T>::setData(const T & value)
-{
-    m_data = value;
-    invalidated();
-}
-    
 } // namespace gloperate

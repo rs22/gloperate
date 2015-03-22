@@ -20,10 +20,18 @@ class InputSlot : public AbstractInputSlot
 public:
     InputSlot();
 
-    const T & data() const;
-    const T & data(const T & defaultValue) const;
-    const T & operator*() const;
-    const T * operator->() const;
+    /**
+     * @brief Convenience call for startReading and finishReading.
+     * Creates a copy, usage strongly discouraged.
+     *
+     * @return the currently stored data
+     */
+    T data();
+    T data(const T & defaultValue);
+
+    const T & startReading();
+    const T & startReading(const T & defaultValue);
+    void finishReading();
 
     virtual bool connectTo(const AbstractData & data) override;
     virtual bool matchType(const AbstractData & data) override;
@@ -33,7 +41,7 @@ public:
     template <typename U>
     InputSlot<T> & operator=(InputSlot<U> & slot);
 
-    virtual const AbstractData * connectedData() const override;
+    virtual const Data<T> * connectedData() const override;
 
 protected:
     const Data<T>* m_data;

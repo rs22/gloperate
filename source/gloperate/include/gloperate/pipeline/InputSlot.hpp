@@ -19,27 +19,43 @@ InputSlot<T>::InputSlot()
 }
 
 template <typename T>
-const T & InputSlot<T>::data() const
+T InputSlot<T>::data()
 {
     return data(s_defaultValue);
 }
 
 template <typename T>
-const T & InputSlot<T>::data(const T & defaultValue) const
+T InputSlot<T>::data(const T & defaultValue)
 {
-    return isConnected() ? m_data->data() : defaultValue;
+    T d = isConnected() ? m_data->startReading() : defaultValue;
+
+    if (isConnected())
+    {
+        m_data->finishReading();
+    }
+
+    return d;
 }
-    
+
 template <typename T>
-const T & InputSlot<T>::operator*() const
+const T & InputSlot<T>::startReading()
 {
-    return data();
+    return startReading(s_defaultValue);
 }
-    
+
 template <typename T>
-const T * InputSlot<T>::operator->() const
+const T & InputSlot<T>::startReading(const T & defaultValue)
 {
-    return &data();
+    return isConnected() ? m_data->startReading() : defaultValue;
+}
+
+template <typename T>
+void InputSlot<T>::finishReading()
+{
+    if (isConnected())
+    {
+        m_data->finishReading();
+    }
 }
 
 template <typename T>
@@ -103,7 +119,7 @@ void InputSlot<T>::connect(const Data<U> & data)
 }
 
 template <typename T>
-const AbstractData * InputSlot<T>::connectedData() const
+const Data<T> * InputSlot<T>::connectedData() const
 {
     return m_data;
 }
