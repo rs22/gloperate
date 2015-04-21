@@ -27,7 +27,13 @@ PipelineOutputCapability::~PipelineOutputCapability()
 
 std::vector<gloperate::AbstractData*> PipelineOutputCapability::allOutputs() const
 {
-    return m_pipeline.allOutputs();
+	std::vector<gloperate::AbstractData*> result;
+	std::vector<gloperate::AbstractData*> tmpOutputs = m_pipeline.allOutputs();
+
+	std::copy(tmpOutputs.begin(), tmpOutputs.end(), std::back_inserter(result));
+	std::copy(m_pipeline.parameters().begin(), m_pipeline.parameters().end(), std::back_inserter(result));
+	
+    return result;
 }
 
 }
