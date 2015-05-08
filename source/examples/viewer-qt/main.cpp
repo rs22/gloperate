@@ -19,11 +19,13 @@
 #include <gloperate-qt/QtMouseEventProvider.h>
 #include <gloperate-qt/QtWheelEventProvider.h>
 
+#include <QDebug>
 #include <QApplication>
 #include <QCoreApplication>
 #include <QDesktopWidget>
 #include <QString>
 #include <QMainWindow>
+#include <QOpenGLWidget>
 
 #include "QtViewerMapping.h"
 
@@ -74,11 +76,14 @@ int main(int argc, char * argv[])
 
     // Create OpenGL window
     QSurfaceFormat format;
+    format.setDepthBufferSize(16);
+    format.setStencilBufferSize(8);
     format.setVersion(3, 2);
     format.setProfile(QSurfaceFormat::CoreProfile);
-    format.setDepthBufferSize(16);
+    
+    QSurfaceFormat::setDefaultFormat(format);
 
-    QtOpenGLWindow * window = new QtOpenGLWindow(resourceManager, format);
+    QtOpenGLWindow * window = new QtOpenGLWindow(resourceManager);
     window->setPainter(painter.get());
     window->installEventFilter(keyProvider);
     window->installEventFilter(mouseProvider);
@@ -91,16 +96,15 @@ int main(int argc, char * argv[])
     mapping->addProvider(mouseProvider);
     mapping->addProvider(wheelProvider);
     
-
     QRect rect = QApplication::desktop()->screenGeometry(); // used to center the mainwindow on desktop
 
     // Create main window
-    QMainWindow mainWindow;
-    mainWindow.setGeometry((rect.width() - 1280) / 2, (rect.height() - 720) / 2, 1280, 720);
-    mainWindow.setCentralWidget(QWidget::createWindowContainer(window));
-    mainWindow.centralWidget()->setFocusPolicy(Qt::StrongFocus);
+    auto mainWindow = new QMainWindow();
+    mainWindow->setGeometry((rect.width() - 1280) / 2, (rect.height() - 720) / 2, 1280, 720);
+    mainWindow->setCentralWidget(window);
+    mainWindow->centralWidget()->setFocusPolicy(Qt::StrongFocus);
 
-    mainWindow.show();
+    mainWindow->show();
 
     return app.exec();
 }

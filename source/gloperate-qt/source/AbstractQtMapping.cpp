@@ -12,8 +12,8 @@ namespace gloperate_qt
 {
 
 AbstractQtMapping::AbstractQtMapping(QtOpenGLWindow * window)
-    :   AbstractMapping()
-    ,   m_window(window)
+:   AbstractMapping()
+,   m_window(window)
 {
 }
 
@@ -23,9 +23,9 @@ AbstractQtMapping::~AbstractQtMapping()
 
 void AbstractQtMapping::processEvent(AbstractEvent * event)
 {
-    m_window->context()->makeCurrent(m_window);
+    m_window->makeCurrent();
     mapEvent(event);
-    m_window->context()->doneCurrent();
+    m_window->doneCurrent();
 }
 
 } // namespace gloperate_qt

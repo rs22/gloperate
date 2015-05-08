@@ -28,23 +28,14 @@ namespace gloperate_qt
 */
 class GLOPERATE_QT_API QtOpenGLWindow : public QtOpenGLWindowBase
 {
-
-
 public:
     /**
     *  @brief
     *    Constructor
     */
-    QtOpenGLWindow(gloperate::ResourceManager & resourceManager);
-
-    /**
-    *  @brief
-    *    Constructor
-    *
-    *  @param[in] format
-    *    Surface format
-    */
-    QtOpenGLWindow(gloperate::ResourceManager & resourceManager, const QSurfaceFormat & format);
+    QtOpenGLWindow(
+        gloperate::ResourceManager & resourceManager,
+        QWidget * parent = nullptr);
 
     /**
     *  @brief
@@ -73,8 +64,9 @@ public:
 
 protected:
     virtual void onInitialize() override;
-    virtual void onResize(QResizeEvent * event) override;
+    virtual void onResize(int w, int h) override;
     virtual void onPaint() override;
+    
     virtual void keyPressEvent(QKeyEvent * event) override;
     virtual void keyReleaseEvent(QKeyEvent * event) override;
     virtual void mouseMoveEvent(QMouseEvent * event) override;

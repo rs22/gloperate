@@ -1,21 +1,21 @@
 #pragma once
 
-
 #include <gloperate-qt/qt-includes-begin.h>
 
-#include <QWindow>
-#include <QScopedPointer>
-#include <QSurfaceFormat>
+#include <QWidget>
 
 #include <gloperate-qt/qt-includes-end.h>
 #include <gloperate-qt/gloperate-qt_api.h>
 
 
+class QSurfaceFormat;
 class QOpenGLContext;
 
 
 namespace gloperate_qt
 {
+
+class QtOpenGLWindowBasePrivate;
 
 /**
 *  @brief
@@ -26,7 +26,7 @@ namespace gloperate_qt
 *    using gloperate for rendering. When using gloperate, the derived
 *    class QtOpenGLWindow should be used.
 */
-class GLOPERATE_QT_API QtOpenGLWindowBase : public QWindow
+class GLOPERATE_QT_API QtOpenGLWindowBase : public QWidget
 {
 public:
     /**
@@ -43,16 +43,7 @@ public:
     *  @brief
     *    Constructor
     */
-    QtOpenGLWindowBase();
-
-    /**
-    *  @brief
-    *    Constructor
-    *
-    *  @param[in] format
-    *    Surface format
-    */
-    QtOpenGLWindowBase(const QSurfaceFormat & format);
+    QtOpenGLWindowBase(QWidget * parent = nullptr);
 
     /**
     *  @brief
@@ -75,44 +66,26 @@ public:
     */
     void updateGL();
 
-    /**
-    *  @brief
-    *    Initialize OpenGL rendering
-    */
-    void initialize();
-
 	void makeCurrent();
 	void doneCurrent();
-
-protected:
-
-    /**
-    *  @brief
-    *    Resize OpenGL scene
-    */
-    void resize(QResizeEvent * event);
-
-    /**
-    *  @brief
-    *    Render OpenGL scene
-    */
-    void paint();
+    
+    unsigned int defaultFramebufferObject() const;
 
 protected:
     virtual void onInitialize();
-    virtual void onResize(QResizeEvent * event);
+    virtual void onResize(int w, int h);
     virtual void onPaint();
 
     virtual bool event(QEvent * event) override;
-    virtual void resizeEvent(QResizeEvent * event) override;
-    virtual void exposeEvent(QExposeEvent * event) override;
     virtual void enterEvent(QEvent * event);
     virtual void leaveEvent(QEvent * event);
 
 protected:
-    QScopedPointer<QOpenGLContext> m_context;       /**< OpenGL context created and used by the window */
-    bool                           m_initialized;   /**< Has the rendering already been initialized? */
-    bool                           m_updatePending; /**< Flag to indicate if a redraw has been requested */
+    void setUninitialized();
+
+protected:
+    friend class QtOpenGLWindowBasePrivate;
+    QtOpenGLWindowBasePrivate * m_private;
 };
 
 } // namespace gloperate-qt

@@ -17,6 +17,7 @@
 
 #include <gloperate/base/make_unique.hpp>
 #include <gloperate/painter/AbstractViewportCapability.h>
+#include <gloperate/painter/AbstractTargetFramebufferCapability.h>
 #include <gloperate/painter/AbstractInputCapability.h>
 #include <gloperate/resources/ResourceManager.h>
 #include <gloperate/tools/ScreenshotTool.h>
@@ -32,19 +33,10 @@ namespace gloperate_qt
 *  @brief
 *    Constructor
 */
-QtOpenGLWindow::QtOpenGLWindow(gloperate::ResourceManager & resourceManager)
-:   m_resourceManager(resourceManager)
-,   m_painter(nullptr)
-,   m_timePropagator(nullptr)
-{
-}
-
-/**
-*  @brief
-*    Constructor
-*/
-QtOpenGLWindow::QtOpenGLWindow(gloperate::ResourceManager & resourceManager, const QSurfaceFormat & format)
-:   QtOpenGLWindowBase(format)
+QtOpenGLWindow::QtOpenGLWindow(
+    gloperate::ResourceManager & resourceManager,
+    QWidget * parent)
+:   QtOpenGLWindowBase(parent)
 ,   m_resourceManager(resourceManager)
 ,   m_painter(nullptr)
 ,   m_timePropagator(nullptr)
@@ -55,10 +47,8 @@ QtOpenGLWindow::QtOpenGLWindow(gloperate::ResourceManager & resourceManager, con
 *  @brief
 *    Destructor
 */
-QtOpenGLWindow::~QtOpenGLWindow()
-{
-}
-
+QtOpenGLWindow::~QtOpenGLWindow() = default;
+    
 /**
 *  @brief
 *    Get used painter
@@ -89,7 +79,7 @@ void QtOpenGLWindow::setPainter(Painter * painter)
     if (m_painter->supports<AbstractVirtualTimeCapability>())
         m_timePropagator->setCapability(m_painter->getCapability<AbstractVirtualTimeCapability>());
 
-    m_initialized = false;
+    setUninitialized();
 }
 
 void QtOpenGLWindow::onInitialize()
@@ -101,20 +91,27 @@ void QtOpenGLWindow::onInitialize()
     // Initialize painter
     if (m_painter)
     {
-        AbstractViewportCapability * viewportCapability = m_painter->getCapability<AbstractViewportCapability>();
+        auto viewportCapability = m_painter->getCapability<AbstractViewportCapability>();
 
         if (viewportCapability)
         {
-            qreal factor = QWindow::devicePixelRatio();
+            const auto factor = devicePixelRatio();
             // Resize painter
             viewportCapability->setViewport(0, 0, factor * width(), factor * height());
+        }
+        
+        auto framebufferCapability = m_painter->getCapability<AbstractTargetFramebufferCapability>();
+
+        if (framebufferCapability)
+        {
+            framebufferCapability->setFramebuffer(globjects::Framebuffer::fromId(defaultFramebufferObject()));
         }
 
         m_painter->initialize();
     }
 }
 
-void QtOpenGLWindow::onResize(QResizeEvent * event)
+void QtOpenGLWindow::onResize(int w, int h)
 {
     if (m_painter)
     {
@@ -123,7 +120,7 @@ void QtOpenGLWindow::onResize(QResizeEvent * event)
         if (viewportCapability)
         {
             // Resize painter
-            viewportCapability->setViewport(0, 0, event->size().width(), event->size().height());
+            viewportCapability->setViewport(0, 0, w, h);
         }
     }
 }
@@ -136,11 +133,11 @@ void QtOpenGLWindow::onPaint()
     }
     else
     {
-        qreal factor = QWindow::devicePixelRatio();
+        const auto factor = devicePixelRatio();
 
         gl::glClearColor(1.0, 1.0, 1.0, 1.0);
         gl::glViewport(0, 0, factor * width(), factor * height());
-        gl::glBindFramebuffer(gl::GL_FRAMEBUFFER, 0);
+        gl::glBindFramebuffer(gl::GL_FRAMEBUFFER, defaultFramebufferObject());
         gl::glClear(gl::GL_COLOR_BUFFER_BIT | gl::GL_DEPTH_BUFFER_BIT);
     }
 }

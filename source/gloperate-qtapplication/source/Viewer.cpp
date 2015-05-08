@@ -3,6 +3,7 @@
 
 #include <cassert>
 
+#include <QSurfaceFormat>
 #include <QDockWidget>
 #include <QLayout>
 #include <QUrl>
@@ -206,10 +207,12 @@ void Viewer::setupCanvas()
 #endif
     format.setProfile(QSurfaceFormat::CoreProfile);
     format.setDepthBufferSize(16);
+    
+    QSurfaceFormat::setDefaultFormat(format);
 
-    m_canvas.reset(new gloperate_qt::QtOpenGLWindow(*m_resourceManager, format)); // make_unique is C++14
+    m_canvas.reset(new gloperate_qt::QtOpenGLWindow(*m_resourceManager)); // make_unique is C++14
 
-    setCentralWidget(QWidget::createWindowContainer(m_canvas.get()));
+    setCentralWidget(m_canvas.get());
     centralWidget()->setFocusPolicy(Qt::StrongFocus);
 
     gloperate_qt::QtKeyEventProvider * keyProvider = new gloperate_qt::QtKeyEventProvider();
@@ -273,7 +276,7 @@ void Viewer::switchToPainter(bool)
     m_canvas->setPainter(m_currentPainter.get());
     m_mapping->setPainter(m_currentPainter.get());
 
-    m_canvas->initialize();
+//    m_canvas->initialize();
 
     if (m_currentPainter.get())
     {
