@@ -34,7 +34,7 @@ enum LightSourceType
 
 class GLOPERATE_API Light
 {
-protected:
+public:
 	/** The name of the light source.
 	 */
     std::string m_name;
